@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "netco-unityclient", "netco-unityclient\netco-unityclient.csproj", "{835619B7-F06F-4A9B-A0B7-5AB7A88A5D2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{11DD8C2F-29EA-4AF3-B181-50F019B01C76}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{835619B7-F06F-4A9B-A0B7-5AB7A88A5D2C}.Debug|x86.ActiveCfg = Debug|x86
+		{835619B7-F06F-4A9B-A0B7-5AB7A88A5D2C}.Debug|x86.Build.0 = Debug|x86
+		{835619B7-F06F-4A9B-A0B7-5AB7A88A5D2C}.Release|x86.ActiveCfg = Release|x86
+		{835619B7-F06F-4A9B-A0B7-5AB7A88A5D2C}.Release|x86.Build.0 = Release|x86
+		{11DD8C2F-29EA-4AF3-B181-50F019B01C76}.Debug|x86.ActiveCfg = Debug|x86
+		{11DD8C2F-29EA-4AF3-B181-50F019B01C76}.Debug|x86.Build.0 = Debug|x86
+		{11DD8C2F-29EA-4AF3-B181-50F019B01C76}.Release|x86.ActiveCfg = Release|x86
+		{11DD8C2F-29EA-4AF3-B181-50F019B01C76}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+EndGlobal
