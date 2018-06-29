@@ -38,7 +38,7 @@ namespace netco {
             Buffer.BlockCopy(header, 0, buffer, 0, header.Length);
             // body
             Buffer.BlockCopy(data, 0, buffer, header.Length, data.Length);
-            Console.WriteLine("====>" + header.ToStringx());
+
             return buffer;
         }
 
@@ -55,11 +55,6 @@ namespace netco {
             // transport level
             var rs = Packet.ToDataPacketBinary(PacketType.PacketType_DATA, appData);
             transporter.Send(rs);
-
-            Console.WriteLine("routeId:" + routeId + ", " + (int)routeId + " " + rs.ToStringx() + 
-                              ((UInt32)(61 << 24 | 114 << 16 | 228 << 8 | 153))
-                             
-                             );
         }
 
         #endregion

@@ -40,6 +40,9 @@
     <Compile Include="src\connector\Transporter.cs" />
     <Compile Include="src\connector\Client.cs" />
     <Compile Include="src\misc\Crc32.cs" />
+    <Compile Include="src\connector\MessageProtocol.cs" />
+    <Compile Include="src\connector\UDPClient.cs" />
+    <Compile Include="src\connector\UDPTransporter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
