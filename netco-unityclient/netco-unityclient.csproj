@@ -31,6 +31,7 @@
     <Folder Include="src\" />
     <Folder Include="src\connector\" />
     <Folder Include="src\misc\" />
+    <Folder Include="src\events\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\connector\TCPClient.cs" />
@@ -43,6 +44,9 @@
     <Compile Include="src\connector\MessageProtocol.cs" />
     <Compile Include="src\connector\UDPClient.cs" />
     <Compile Include="src\connector\UDPTransporter.cs" />
+    <Compile Include="src\events\EventManager.cs" />
+    <Compile Include="src\events\EventListener.cs" />
+    <Compile Include="src\misc\Debug.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />

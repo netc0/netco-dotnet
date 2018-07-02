@@ -96,12 +96,16 @@ namespace netco {
 
         #region OnReadBytes 读bytes
         public void OnReadBytes(byte[] data) {
-            Packet pkg = handleBytes(data);
-            do {
-                if (pkg == null) break;
-                processPacket(pkg);
-                pkg = handleBytes(null);
-            } while (true);
+            try {
+                Packet pkg = handleBytes(data);
+                do {
+                    if (pkg == null) break;
+                    processPacket(pkg);
+                    pkg = handleBytes(null);
+                } while (true);
+            } catch (Exception e) {
+                Debug.Log(e);
+            }
         }
         #endregion
 
@@ -154,7 +158,7 @@ namespace netco {
         #endregion
 
         void processPacket(Packet pkg) {
-            Console.WriteLine("processPacket:" + pkg.Type);
+            //Console.WriteLine("processPacket:" + pkg.Type);
             switch (pkg.Type) {
                 case PacketType.PacketType_DATA: {
                         // 解析request ID
@@ -177,8 +181,16 @@ namespace netco {
                         Console.WriteLine("踢下线了");
                     }break;
                 case PacketType.PacketType_PUSH : {
-                        var str = System.Text.Encoding.Default.GetString(pkg.Data);
-                        Console.WriteLine("收到推送消息:" + str);
+                        // 解析routeId
+                        var data = pkg.Data;
+                        UInt32 routeId =
+                            ((UInt32)data[0]) << 24 |
+                            ((UInt32)data[1]) << 16 |
+                            ((UInt32)data[2]) << 8 |
+                            ((UInt32)data[3]);
+                        var Body = new byte[data.Length - 4];
+                        Buffer.BlockCopy(data, 4, Body, 0, data.Length - 4);
+                        client.OnPushMessage(routeId, Body);
                     }
                     break;
             }
@@ -225,5 +237,14 @@ public static class Utility {
     public static string BytesToString(this byte[] data) {
         if (data == null) return null;
         return System.Text.Encoding.Default.GetString(data);
+    }
+
+    public static byte[] StringToBytesUTF8(this string data) {
+        if (data == null) return null;
+        return System.Text.Encoding.UTF8.GetBytes(data);
+    }
+    public static string BytesToStringUTF8(this byte[] data) {
+        if (data == null) return null;
+        return System.Text.Encoding.UTF8.GetString(data);
     }
 }

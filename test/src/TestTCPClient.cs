@@ -6,6 +6,11 @@ namespace test {
     public class TestTCPClient {
         
         public void start() {
+
+            netco.Debug.LogPrinter += (obj) => {
+                Console.WriteLine(obj);
+            };
+
             testUDP();
         }
 
@@ -55,7 +60,17 @@ namespace test {
                     var msg = r.BytesToString();
                     Console.WriteLine("收到:{0}", msg);
                 });
+                int eid = 0;
+                eid = client.AddEvent("game.OnPush", (r) => {
+                    var msg = r.BytesToString();
+                    if (msg == "推送消息 3") {
+                        client.RemoveEvent(eid);
+                    }
+                    Console.WriteLine("收到推送的数据:{0}", msg);
+                });
             });
+
+
         }
     }
 }

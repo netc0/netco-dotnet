@@ -11,10 +11,10 @@ namespace netco {
         /// </summary>
         protected Client   client;
 
-        /// <summary>
-        /// 网络断开回调
-        /// </summary>
-        public event Action OnDisconnected;
+        ///// <summary>
+        ///// 网络断开回调
+        ///// </summary>
+        //public event Action OnDisconnected;
 
         public virtual void Send(byte[]data) {}
 

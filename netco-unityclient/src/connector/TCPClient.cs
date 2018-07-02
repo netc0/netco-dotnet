@@ -10,7 +10,6 @@ namespace netco {
         private ManualResetEvent timeoutEvent = new ManualResetEvent(false);
         private int timeoutMSec = 8000;
 
-        private Protocol protocol = null;
         private TCPTransporter transporter = null;
 
         public void Connect(IPAddress ipAddress, int port, Action onFinishedCallback = null) {
@@ -57,6 +56,16 @@ namespace netco {
 
         public void OnPushData(byte[] data) {
             Console.WriteLine("收到:{0}", data.BytesToString());
+        }
+
+        public override void Close() {
+            if (socket != null) {
+                socket.Shutdown(SocketShutdown.Both);
+                socket.Close();
+            }
+            socket = null;
+
+            ChangeNetworkState(NetworkState.Closed);
         }
     }
 }
