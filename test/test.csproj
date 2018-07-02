@@ -40,7 +40,7 @@
   <ItemGroup>
     <ProjectReference Include="..\netco-unityclient\netco-unityclient.csproj">
       <Project>{835619B7-F06F-4A9B-A0B7-5AB7A88A5D2C}</Project>
-      <Name>netco-unityclient</Name>
+      <Name>netco-dotnet</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
