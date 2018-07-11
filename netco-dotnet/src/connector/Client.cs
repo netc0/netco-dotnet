@@ -60,7 +60,12 @@ namespace netco {
 
         }
 
-        public virtual void Close() {}
+        public virtual void Close() {
+            if (protocol != null) {
+                protocol.Close();
+            }
+            protocol = null;
+        }
 
         public int AddEvent(string route, Action<byte[]> callback) {
             return eventManager.AddEvent(route, callback);
@@ -76,5 +81,6 @@ namespace netco {
         public NetworkState GetNetworkState() {
             return networkState;
         }
+        public virtual void Request(string route, byte[] data = null, Action<byte[]> callback = null) {}
     }
 }

@@ -6,7 +6,7 @@
     <ProjectGuid>{835619B7-F06F-4A9B-A0B7-5AB7A88A5D2C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>netco</RootNamespace>
-    <AssemblyName>netco-unityclient</AssemblyName>
+    <AssemblyName>netco-dotnet</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <UseMSBuildEngine>false</UseMSBuildEngine>
   </PropertyGroup>
@@ -46,7 +46,7 @@
     <Compile Include="src\connector\UDPTransporter.cs" />
     <Compile Include="src\events\EventManager.cs" />
     <Compile Include="src\events\EventListener.cs" />
-    <Compile Include="src\misc\Debug.cs" />
+    <Compile Include="src\misc\NDebug.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />

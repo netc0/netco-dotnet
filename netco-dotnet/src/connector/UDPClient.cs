@@ -49,23 +49,23 @@ namespace netco {
             });
         }
 
-        public void Request(string route, byte[] data, Action<byte[]> callback = null) {
+        public override void Request(string route, byte[] data = null, Action<byte[]> callback = null) {
             if (protocol == null) { return; }
             protocol.Request(route, data, callback);
         }
 
-        public void OnPushData(byte[] data) {
-            Console.WriteLine("收到:{0}", data.BytesToString());
-        }
-
         public override void Close() {
-            if (socket != null) {
-                socket.Shutdown(SocketShutdown.Both);
-                socket.Close();
+            try {
+                base.Close();
+                if (socket != null) {
+                    socket.Shutdown(SocketShutdown.Both);
+                    socket.Close();
+                }
+                socket = null;
+                ChangeNetworkState(NetworkState.Closed);
+            } catch (Exception e){
+                NDebug.Log(e);
             }
-            socket = null;
-
-            ChangeNetworkState(NetworkState.Closed);
         }
     }
 }

@@ -19,14 +19,14 @@ namespace netco {
                 socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(sendCallback), socket);
             } catch (Exception e) {
                 client.ChangeNetworkState(NetworkState.Error);
-                Debug.Log(e);
+                NDebug.Log(e);
             }
         }
         private void sendCallback(IAsyncResult arg) {
             try {
                 socket.EndSend(arg);
             } catch (Exception e) {
-                Debug.Log(e);
+                NDebug.Log(e);
                 client.ChangeNetworkState(NetworkState.Closed);
             }
         }
@@ -36,7 +36,7 @@ namespace netco {
                 socket.BeginReceive(receiveBuffer, 0, receiveBuffer.Length, SocketFlags.None, new AsyncCallback(receiveCallback), socket);
             }catch(Exception e) {
                 client.ChangeNetworkState(NetworkState.Error);
-                Debug.Log(e);
+                NDebug.Log(e);
             }
         }
 
@@ -54,7 +54,7 @@ namespace netco {
                     client.ChangeNetworkState(NetworkState.Error);
                 }
             } catch (Exception e) {
-                Debug.Log(e);
+                NDebug.Log(e);
                 client.ChangeNetworkState(NetworkState.Closed);
             } 
         }

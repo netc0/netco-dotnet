@@ -33,6 +33,7 @@ namespace netco {
             header[6] = (byte)(routeId >> 8);
             header[7] = (byte)(routeId >> 0);
 
+            if (data == null) data = new byte[0];
             byte[] buffer = new byte[header.Length + data.Length];
             // header
             Buffer.BlockCopy(header, 0, buffer, 0, header.Length);
@@ -104,7 +105,7 @@ namespace netco {
                     pkg = handleBytes(null);
                 } while (true);
             } catch (Exception e) {
-                Debug.Log(e);
+                NDebug.Log(e);
             }
         }
         #endregion
@@ -215,7 +216,9 @@ namespace netco {
         }
         #endregion
 
-        
+        internal void Close() {
+            stopHeartBeat(); // 停止心跳包发送
+        }
     }
 }
 

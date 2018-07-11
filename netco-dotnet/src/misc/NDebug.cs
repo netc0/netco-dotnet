@@ -1,6 +1,6 @@
 ﻿using System;
 namespace netco {
-    public static class Debug {
+    internal static class NDebug {
         public static event Action<object> LogPrinter;
 
         public static void Log(object obj) {

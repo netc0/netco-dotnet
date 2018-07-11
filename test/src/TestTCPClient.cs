@@ -7,10 +7,10 @@ namespace test {
         
         public void start() {
 
-            netco.Debug.LogPrinter += (obj) => {
-                Console.WriteLine(obj);
-            };
-
+            //netco.NDebug.LogPrinter += (obj) => {
+            //    Console.WriteLine(obj);
+            //};
+            testTCP();
             testUDP();
         }
 
@@ -27,15 +27,16 @@ namespace test {
             client.Connect(ipAddress, 9000, () => {
                 Debug.Log("连接成功");
 
-                client.Request("Example.Test", "hello".StringToBytes(), (r) => {
+                client.Request("game.join", "helloTCP".StringToBytes(), (r) => {
                     var msg = r.BytesToString();
                     Console.WriteLine("收到:{0}", msg);
                 });
 
-                client.Request("Example.Login", "login".StringToBytes(), (r) => {
+                client.Request("game.login", "login".StringToBytes(), (r) => {
                     var msg = r.BytesToString();
                     Console.WriteLine("收到:{0}", msg);
                 });
+
             });
         }
         void testUDP() {
@@ -51,12 +52,12 @@ namespace test {
             client.Connect(ipAddress, 9001, () => {
                 Debug.Log("连接成功");
 
-                client.Request("Example.Test", "hello".StringToBytes(), (r) => {
+                client.Request("game.join", "helloUDP".StringToBytes(), (r) => {
                     var msg = r.BytesToString();
                     Console.WriteLine("收到:{0}", msg);
                 });
 
-                client.Request("Example.Login", "login".StringToBytes(), (r) => {
+                client.Request("game.login", "login".StringToBytes(), (r) => {
                     var msg = r.BytesToString();
                     Console.WriteLine("收到:{0}", msg);
                 });

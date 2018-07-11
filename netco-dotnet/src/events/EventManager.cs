@@ -41,13 +41,13 @@ namespace netco {
         public void OnPushMessage(UInt32 routeId, byte[] data) {
             var evt = GetEventListener(routeId);
             if (evt == null) {
-                Debug.Log("未监听: " + routeId);
+                NDebug.Log("未监听: " + routeId);
                 return;
             }
             try {
                 evt.callback.Invoke(data);
             }catch (Exception e){
-                Debug.Log(e);
+                NDebug.Log(e);
             }
         }
 
