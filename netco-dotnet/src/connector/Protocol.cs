@@ -15,7 +15,7 @@ namespace netco {
             startHeartBeat();
         }
 
-        Dictionary<UInt32, Action<byte[]>> RequestMap = new Dictionary<UInt32, Action<byte[]>>();
+        Dictionary<UInt32, Action<int, byte[]>> RequestMap = new Dictionary<UInt32, Action<int, byte[]>>();
 
         UInt32 GetRouteCRC32(string route) {
             return Crc32.GetCRC32Str(route);
@@ -44,7 +44,7 @@ namespace netco {
         }
 
         #region Request 发送请求
-        public void Request(string route, byte[] data, Action<byte[]> callback) {
+        public void Request(string route, byte[] data, Action<int, byte[]> callback) {
             _requestId++;
             RequestMap.Add(_requestId, callback);
             // 1. 构造应用层数据包
@@ -112,7 +112,6 @@ namespace netco {
 
         #region handleBytes 尝试解析byte构造packet
         Packet handleBytes(byte[] data) {
-            //Console.WriteLine(data.ToStringx());
             if (data != null) {
                 AppendToReadBuffer(data);
             }
@@ -159,27 +158,44 @@ namespace netco {
         #endregion
 
         void processPacket(Packet pkg) {
-            //Console.WriteLine("processPacket:" + pkg.Type);
+            //NDebug.Log("processPacket:" + pkg.Type);
             switch (pkg.Type) {
                 case PacketType.PacketType_DATA: {
                         // 解析request ID
                         var data = pkg.Data;
+                        var headerSize = 8;
                         UInt32 requestID =
                             ((UInt32)data[0]) << 24 |
                             ((UInt32)data[1]) << 16 |
                             ((UInt32)data[2]) << 8 |
                             ((UInt32)data[3]);
-                        var Body = new byte[data.Length - 4];
-                        Buffer.BlockCopy(data, 4, Body, 0, data.Length - 4);
+                        UInt32 statusCode = 
+                            ((UInt32)data[4]) << 24 |
+                            ((UInt32)data[5]) << 16 |
+                            ((UInt32)data[6]) << 8 |
+                            ((UInt32)data[7]);
+                        
+
+                        var Body = new byte[data.Length - headerSize];
+                        Buffer.BlockCopy(data, headerSize, Body, 0, data.Length - headerSize);
+
                         if (RequestMap.ContainsKey(requestID)) {
                             var cb = RequestMap[requestID];
                             RequestMap.Remove(requestID);
-                            try { cb(Body); } catch { }
+                            try { 
+                                
+                                cb.Invoke((int)statusCode, Body); 
+                            } catch(Exception e) {
+                                NDebug.Log(e);
+                                client.LastError = e.ToString();
+                            }
+                        } else {
+                            NDebug.Log("not request id not found.");
                         }
                     }
                     break;
                 case PacketType.PacketType_KICK: {
-                        Console.WriteLine("踢下线了");
+                        NDebug.Log("踢下线了");
                     }break;
                 case PacketType.PacketType_PUSH : {
                         // 解析routeId
@@ -194,12 +210,19 @@ namespace netco {
                         client.OnPushMessage(routeId, Body);
                     }
                     break;
+                default:
+                    NDebug.Log("type not support");
+                    break;
             }
         }
 
         #region 心跳处理
         Timer heartBeatTimer;
         void sendHeartBeat(object source, ElapsedEventArgs e) {
+            if (this.client.GetNetworkState() != NetworkState.Connected) {
+                stopHeartBeat();
+                return;
+            }
             var rs = Packet.ToRawPacketBinary(PacketType.PacketType_HEARTBEAT, null);
             transporter.Send(rs);
         }

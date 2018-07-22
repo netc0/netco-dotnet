@@ -16,7 +16,7 @@ namespace netco {
         ///// </summary>
         //public event Action OnDisconnected;
 
-        public virtual void Send(byte[]data) {}
+        public virtual void Send(byte[] buf) {}
 
         /// <summary>
         /// 设置协议

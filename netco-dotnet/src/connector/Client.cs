@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+
 namespace netco {
 
     /// <summary>
@@ -39,8 +41,9 @@ namespace netco {
     public class Client {
         protected NetworkState networkState;
         protected EventManager eventManager = new EventManager();
-        public event Action<NetworkState> OnNetworkStateChanged;
+        public event Action<NetworkState, string> OnNetworkStateChanged;
         protected Protocol protocol = null;
+        public string LastError { get; internal set; }
         public int HeartBeatInterval {
             get {
                 return _HeartBeatInterval;
@@ -56,11 +59,15 @@ namespace netco {
         /// <param name="state">State.</param>
         public void ChangeNetworkState(NetworkState state) {
             networkState = state;
-            OnNetworkStateChanged?.Invoke(state);
+            OnNetworkStateChanged?.Invoke(state, this.LastError);
+        }
 
+        public virtual void Connect(IPAddress ipAddress, int port, Action onFinishedCallback = null) {
+            
         }
 
         public virtual void Close() {
+            if (this.networkState == NetworkState.Closed) return;
             if (protocol != null) {
                 protocol.Close();
             }
@@ -81,6 +88,6 @@ namespace netco {
         public NetworkState GetNetworkState() {
             return networkState;
         }
-        public virtual void Request(string route, byte[] data = null, Action<byte[]> callback = null) {}
+        public virtual void Request(string route, byte[] data = null, Action<int, byte[]> callback = null) {}
     }
 }

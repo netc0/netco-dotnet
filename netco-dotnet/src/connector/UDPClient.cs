@@ -12,7 +12,7 @@ namespace netco {
 
         private UDPTransporter transporter = null;
 
-        public void Connect(IPAddress ipAddress, int port, Action onFinishedCallback = null) {
+        public override void Connect(IPAddress ipAddress, int port, Action onFinishedCallback = null) {
             ThreadPool.QueueUserWorkItem(state => {
                 timeoutEvent.Reset();
 
@@ -49,7 +49,7 @@ namespace netco {
             });
         }
 
-        public override void Request(string route, byte[] data = null, Action<byte[]> callback = null) {
+        public override void Request(string route, byte[] data = null, Action<int, byte[]> callback = null) {
             if (protocol == null) { return; }
             protocol.Request(route, data, callback);
         }

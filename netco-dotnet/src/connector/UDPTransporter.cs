@@ -12,31 +12,32 @@ namespace netco {
             this.receive();
         }
 
-        public override void Send(byte[] buffer) {
+        public override void Send(byte[] buf) {
             try {
                 if (client.GetNetworkState() != NetworkState.Connected)
                     return;
-                socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(sendCallback), socket);
+                socket.BeginSend(buf, 0, buf.Length, SocketFlags.None, new AsyncCallback(sendCallback), socket);
             } catch (Exception e) {
+                client.LastError = e.ToString();
                 client.ChangeNetworkState(NetworkState.Error);
-                NDebug.Log(e);
             }
         }
         private void sendCallback(IAsyncResult arg) {
             try {
                 socket.EndSend(arg);
             } catch (Exception e) {
-                NDebug.Log(e);
-                client.ChangeNetworkState(NetworkState.Closed);
+                client.LastError = e.ToString();
+                client.ChangeNetworkState(NetworkState.Error);
             }
         }
 
         private void receive() {
             try {
+                if (client.GetNetworkState() != NetworkState.Connected) return;
                 socket.BeginReceive(receiveBuffer, 0, receiveBuffer.Length, SocketFlags.None, new AsyncCallback(receiveCallback), socket);
             } catch(Exception e) {
+                client.LastError = e.ToString();
                 client.ChangeNetworkState(NetworkState.Error);
-                NDebug.Log(e);
             }
         }
 
@@ -48,14 +49,19 @@ namespace netco {
                     var data = new byte[len];
                     Buffer.BlockCopy(receiveBuffer, 0, data, 0, len);
                     protocol.OnReadBytes(data);
-                    receive();
+                    if (this.client.GetNetworkState() == NetworkState.Connected)
+                        receive();
                 } else {
                     // close conn
-                    client.ChangeNetworkState(NetworkState.Error);
+                    if (len == 0) {
+                        client.Close();
+                    } else {
+                        client.ChangeNetworkState(NetworkState.Error);
+                    }
                 }
             } catch (Exception e) {
-                NDebug.Log(e);
-                client.ChangeNetworkState(NetworkState.Closed);
+                client.LastError = e.ToString();
+                client.ChangeNetworkState(NetworkState.Error);
             }
         }
 
